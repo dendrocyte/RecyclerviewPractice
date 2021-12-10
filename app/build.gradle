@@ -42,6 +42,11 @@ android {
             applicationIdSuffix ".stagver"
             versionNameSuffix '-stagver'
         }
+        GridVer {
+            dimension "layout"
+            applicationIdSuffix ".gridver"
+            versionNameSuffix '-gridver'
+        }
     }
 }
 
