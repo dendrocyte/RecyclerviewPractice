@@ -2,10 +2,12 @@
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/tVheader"
+    android:id="@+id/tVfooter"
+    android:text="footer"
     android:gravity="center"
     android:textAlignment="center"
-    android:background="@color/purple_200"
-    android:layout_height="wrap_content">
+    android:background="@color/teal_700"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
 </TextView>

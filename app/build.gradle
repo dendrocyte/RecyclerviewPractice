@@ -52,6 +52,11 @@ android {
             applicationIdSuffix ".gridhor"
             versionNameSuffix '-gridhor'
         }
+        HeadFoot {
+            dimension "layout"
+            applicationIdSuffix ".headfoot"
+            versionNameSuffix '-headfoot'
+        }
     }
 }
 
