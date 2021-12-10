@@ -47,6 +47,11 @@ android {
             applicationIdSuffix ".gridver"
             versionNameSuffix '-gridver'
         }
+        GridHor {
+            dimension "layout"
+            applicationIdSuffix ".gridhor"
+            versionNameSuffix '-gridhor'
+        }
     }
 }
 
