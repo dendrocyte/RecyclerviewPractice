@@ -27,10 +27,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    // Specifies the flavor dimensions you want to use. The order in which you
-    // list each dimension determines its priority, from highest to lowest,
-    // when Gradle merges variant sources and configurations. You must assign
-    // each Products flavor you configure to one of the flavor dimensions.
+
     flavorDimensions "layout"
     productFlavors {
         LinearVer {
@@ -39,14 +36,11 @@ android {
             dimension "layout"
             applicationIdSuffix ".linver"
             versionNameSuffix "-linver"
-            allprojects {
-                repositories {
-                    maven { url "https://jitpack.io" }
-                }
-            }
-            dependencies {
-                implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-            }
+        }
+        StaggerVer {
+            dimension "layout"
+            applicationIdSuffix ".stagver"
+            versionNameSuffix '-stagver'
         }
     }
 }
@@ -58,6 +52,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-
+    implementation "androidx.print:print:1.1.0-beta01"
 
 }
