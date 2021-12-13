@@ -57,6 +57,11 @@ android {
             applicationIdSuffix ".headfoot"
             versionNameSuffix '-headfoot'
         }
+        Select {
+            dimension "layout"
+            applicationIdSuffix ".select"
+            versionNameSuffix "-select"
+        }
     }
 }
 
