@@ -30,6 +30,7 @@ android {
 
     flavorDimensions "layout"
     productFlavors {
+        //use native adapter
         LinearVer {
             // Assigns this Products flavor to the "layout" flavor dimension.
             // This property is optional if you are using only one dimension.
@@ -62,13 +63,27 @@ android {
             applicationIdSuffix ".select"
             versionNameSuffix "-select"
         }
+        //use 3rd party's adapter lib
+        Brvah {
+            dimension "layout"
+            applicationIdSuffix ".brvah"
+            versionNameSuffix "-brvah"
+            allprojects {
+                repositories {
+                    maven { url "https://jitpack.io" }
+                }
+            }
+            dependencies {
+                implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+                implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
+            }
+        }
     }
 }
 
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
