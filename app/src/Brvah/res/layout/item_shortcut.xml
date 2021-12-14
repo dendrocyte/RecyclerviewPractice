@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/rLframe"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iVicon"
+            android:src="@drawable/ic_launcher_background"
+            />
+        <!--this fig only over 24: android:src="@drawable/ic_launcher_foreground"
+-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tVitem"
+            android:layout_below="@+id/iVicon"
+            android:layout_centerHorizontal="true"
+            />
+
+</RelativeLayout>
