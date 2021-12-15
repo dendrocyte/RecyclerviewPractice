@@ -22,10 +22,8 @@ import com.example.recyclerviewpractice.expand.ContentExpandData;
 import com.example.recyclerviewpractice.expand.ExpandNodeAdapter;
 import com.example.recyclerviewpractice.expand.FootExpandData;
 import com.example.recyclerviewpractice.expand.SectionExpandData;
-import com.example.recyclerviewpractice.node.ContentData;
-import com.example.recyclerviewpractice.node.FootData;
 import com.example.recyclerviewpractice.node.NodeAdapter;
-import com.example.recyclerviewpractice.node.SectionData;
+import com.example.recyclerviewpractice.node.NodeData;
 import com.example.recyclerviewpractice.group.multidata.GroupAdapter;
 import com.example.recyclerviewpractice.group.multidata.GroupMultiData;
 import com.example.recyclerviewpractice.group.variabeWH.SpannedGridLayoutManager;
@@ -92,22 +90,22 @@ public class BlankFragment extends Fragment {
         return data;
     }
 
-    private List<SectionData> initNodes(){
-        List<SectionData> data = new LinkedList<>();
+    private List<NodeData> initNodes(){
+        List<NodeData> data = new LinkedList<>();
         List<String> resources = Arrays.asList(getResources().getStringArray(R.array.id));
         for (int j = 0 ; j < 2; j++){
-            List<ContentData> contents = new LinkedList<>();
+            List<NodeData> contents = new LinkedList<>();
             for (int i = 0 ; i < resources.size(); i++){
                 //add footer?
                 BaseNode footer = i == (resources.size() -1)
-                        ? new FootData("footer")
+                        ? new NodeData("footer", null, NodeData.FOOTER)
                         : null;
                 //add items
-                contents.add(new ContentData(j+"-"+resources.get(i), footer));
+                contents.add(new NodeData(j+"-"+resources.get(i), footer, NodeData.ITEM_TXT));
             }
 
             //add header
-            SectionData header = new SectionData("header "+j, contents);
+            NodeData header = new NodeData("header "+j, contents, NodeData.HEADER, null);
             data.add(header);
         }
 

@@ -20,15 +20,13 @@ import com.example.recyclerviewpractice.R;
  * @params
  */
 class FootProvider extends BaseNodeProvider {
-    final String TAG = FootProvider.class.getSimpleName();
-
     public FootProvider() {
         addChildClickViewIds(R.id.tVheader);
     }
 
     @Override
     public int getItemViewType() {
-        return SectionData.FOOTER;
+        return NodeData.FOOTER;
     }
 
     @Override
@@ -39,7 +37,7 @@ class FootProvider extends BaseNodeProvider {
     @Override
     public void convert(BaseViewHolder helper, BaseNode baseNode) {
         //數據要強轉
-        FootData entity = (FootData) baseNode;
+        NodeData entity = (NodeData) baseNode;
         helper.setText(R.id.tVheader, entity.getTitle());
 
     }

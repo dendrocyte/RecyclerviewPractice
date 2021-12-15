@@ -1,6 +1,5 @@
 package com.example.recyclerviewpractice.node;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ class ContentProvider extends BaseNodeProvider {
 
     @Override
     public int getItemViewType() {
-        return SectionData.ITEM_TXT;
+        return NodeData.ITEM_TXT;
     }
 
     @Override
@@ -39,7 +38,7 @@ class ContentProvider extends BaseNodeProvider {
     @Override
     public void convert(BaseViewHolder helper, BaseNode baseNode) {
         //數據要強轉
-        ContentData entity = (ContentData) baseNode;
+        NodeData entity = (NodeData) baseNode;
         helper.setText(R.id.tVitem, entity.getTitle());
     }
 

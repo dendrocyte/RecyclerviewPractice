@@ -28,7 +28,7 @@ class SectionProvider extends BaseNodeProvider {
 
     @Override
     public int getItemViewType() {
-        return SectionData.HEADER;
+        return NodeData.HEADER;
     }
 
     @Override
@@ -40,7 +40,7 @@ class SectionProvider extends BaseNodeProvider {
     public void convert(BaseViewHolder helper, BaseNode baseNode) {
         Log.e(TAG, "this is the header");
         //要用數據強轉
-        SectionData entity = (SectionData) baseNode;
+        NodeData entity = (NodeData) baseNode;
         helper.setText(R.id.tVheader, entity.getTitle());
     }
 
