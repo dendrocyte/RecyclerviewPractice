@@ -18,6 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.example.recyclerviewpractice.card.CardAdapter;
 import com.example.recyclerviewpractice.card.CardData;
+import com.example.recyclerviewpractice.expand.ContentExpandData;
+import com.example.recyclerviewpractice.expand.ExpandNodeAdapter;
+import com.example.recyclerviewpractice.expand.FootExpandData;
+import com.example.recyclerviewpractice.expand.SectionExpandData;
 import com.example.recyclerviewpractice.node.ContentData;
 import com.example.recyclerviewpractice.node.FootData;
 import com.example.recyclerviewpractice.node.NodeAdapter;
@@ -58,6 +62,7 @@ public class BlankFragment extends Fragment {
         initShortcutAdapter();
         initGroupAdapter();
         initNodeAdapter();
+        initNodeExpandAdapter();
     }
 
 
@@ -89,22 +94,49 @@ public class BlankFragment extends Fragment {
 
     private List<SectionData> initNodes(){
         List<SectionData> data = new LinkedList<>();
-        List<ContentData> contents = new LinkedList<>();
         List<String> resources = Arrays.asList(getResources().getStringArray(R.array.id));
+        for (int j = 0 ; j < 2; j++){
+            List<ContentData> contents = new LinkedList<>();
+            for (int i = 0 ; i < resources.size(); i++){
+                //add footer?
+                BaseNode footer = i == (resources.size() -1)
+                        ? new FootData("footer")
+                        : null;
+                //add items
+                contents.add(new ContentData(j+"-"+resources.get(i), footer));
+            }
 
-        for (int i = 0 ; i < resources.size(); i++){
-            //add footer?
-            BaseNode footer = i == (resources.size() -1)
-                    ? new FootData("footer")
-                    : null;
-            //add items
-            contents.add(new ContentData(resources.get(i), footer));
+            //add header
+            SectionData header = new SectionData("header "+j, contents);
+            data.add(header);
         }
 
-        //add header
-        SectionData header = new SectionData("header", contents);
-        data.add(header);
         Log.e(TAG, "size:"+data.size());
+        return data;
+    }
+
+    private List<SectionExpandData> initExpandNodes(int times){
+        List<SectionExpandData> data = new LinkedList<>();
+        List<String> resources = Arrays.asList(getResources().getStringArray(R.array.id));
+
+        for (int j = 0 ; j < times; j ++){
+            List<ContentExpandData> contents = new LinkedList<>();
+
+            for (int i = 0 ; i < resources.size(); i++){
+                //add footer?
+                BaseNode footer = i == (resources.size() -1)
+                        ? new FootExpandData("footer")
+                        : null;
+                //add items
+                contents.add(new ContentExpandData(j+" :"+resources.get(i), footer));
+            }
+
+            //add header
+            SectionExpandData header = new SectionExpandData("header "+j, contents);
+            data.add(header);
+        }
+
+        Log.e(TAG, "expand size:"+data.size());
         return data;
     }
 
@@ -220,6 +252,28 @@ public class BlankFragment extends Fragment {
         nodeRecyclerView.setNestedScrollingEnabled(false);//減少黏著 nestscroll view
         NodeAdapter adapter = new NodeAdapter();
         adapter.setList(initNodes());
+        nodeRecyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * ExpandNodeAdapter 實踐
+     * NOTE recyclerview 要的空間要夠大，要不然會打不開
+     */
+    private void initNodeExpandAdapter() {
+        TextView title = view.findViewById(R.id.nodeExpandTitle);
+        RecyclerView nodeRecyclerView = view.findViewById(R.id.nodeExpandRecycler);
+        //the order is from the top to the end
+        GridLayoutManager manager = new GridLayoutManager(getContext(),2);
+        title.setText(
+                manager.canScrollHorizontally()
+                        ? "Expand Node Horizontal"
+                        : "Expand Node Vertical"
+        );
+        nodeRecyclerView.setLayoutManager(manager);
+        nodeRecyclerView.setHasFixedSize(true);
+        nodeRecyclerView.setNestedScrollingEnabled(true);
+        ExpandNodeAdapter adapter = new ExpandNodeAdapter();
+        adapter.setList(initExpandNodes(3));
         nodeRecyclerView.setAdapter(adapter);
     }
 
