@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.example.recyclerviewpractice.card.CardAdapter;
 import com.example.recyclerviewpractice.card.CardData;
@@ -22,6 +23,9 @@ import com.example.recyclerviewpractice.expand.ContentExpandData;
 import com.example.recyclerviewpractice.expand.ExpandNodeAdapter;
 import com.example.recyclerviewpractice.expand.FootExpandData;
 import com.example.recyclerviewpractice.expand.SectionExpandData;
+import com.example.recyclerviewpractice.loadmore.LoadMoreAdapter;
+import com.example.recyclerviewpractice.loadmore.LoadMoreView;
+import com.example.recyclerviewpractice.loadmore.PageLoader;
 import com.example.recyclerviewpractice.node.NodeAdapter;
 import com.example.recyclerviewpractice.node.NodeData;
 import com.example.recyclerviewpractice.group.multidata.GroupAdapter;
@@ -38,7 +42,7 @@ import java.util.List;
  * 2019 constraintlayout practice
  * 依照nestScrollView 練習測試bravh adapter
  *
- *
+ * 引入動畫來加載item
  */
 public class BlankFragment extends Fragment {
     private String TAG = BlankFragment.class.getSimpleName();
@@ -61,6 +65,7 @@ public class BlankFragment extends Fragment {
         initGroupAdapter();
         initNodeAdapter();
         initNodeExpandAdapter();
+        initLoadMoreAdapter();
     }
 
 
@@ -169,6 +174,9 @@ public class BlankFragment extends Fragment {
         shortcutRecyclerView.setHasFixedSize(true);
         shortcutRecyclerView.setNestedScrollingEnabled(false);//減少黏著 nestscroll view
         ShortcutAdapter adapter = new ShortcutAdapter(initShortcut());
+        //PATCH 加載時的動畫
+        adapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInRight);
+        adapter.setAnimationEnable(true);
         shortcutRecyclerView.setAdapter(adapter);
     }
 
@@ -255,7 +263,7 @@ public class BlankFragment extends Fragment {
 
     /**
      * ExpandNodeAdapter 實踐
-     * NOTE recyclerview 要的空間要夠大，要不然會打不開
+     * NOTE 會不斷添增的RV 不能設定hasFixSize, 其RV的高會被限制，會有資料無法呈現
      */
     private void initNodeExpandAdapter() {
         TextView title = view.findViewById(R.id.nodeExpandTitle);
@@ -268,11 +276,134 @@ public class BlankFragment extends Fragment {
                         : "Expand Node Vertical"
         );
         nodeRecyclerView.setLayoutManager(manager);
-        nodeRecyclerView.setHasFixedSize(true);
+        nodeRecyclerView.setHasFixedSize(false);
         nodeRecyclerView.setNestedScrollingEnabled(true);
         ExpandNodeAdapter adapter = new ExpandNodeAdapter();
         adapter.setList(initExpandNodes(3));
         nodeRecyclerView.setAdapter(adapter);
     }
 
+    /**
+     * <p name="test result">
+     *     Adapter 在創建時
+     *      1.不塞入第一組資料
+     *      hasFixSize = T
+     *          @前提 autoLoadMore = F/T & loadMoreToLoading(V)
+     *          loadMoreToLoading() >> OnLoadMoreListener
+     *          @result 匯入第一組資料
+     *          ------------------------------------------
+     *          @前提 autoLoadMore = F/T & loadMoreToLoading(X)
+     *          @result 不匯入資料
+     *          ------------------------------------------
+     *      hasFixSize = F
+     *          @前提 autoLoadMore = F & loadMoreToLoading(V)
+     *          loadMoreToLoading() >> OnLoadMoreListener
+     *          @result 匯入第一組資料
+     *          ------------------------------------------
+     *          @前提 autoLoadMore = T & loadMoreToLoading(V)
+     *          @result 匯入所有資料
+     *          ------------------------------------------
+     *          @前提 autoLoadMore = F/T & loadMoreToLoading(X)
+     *          @result 不匯入資料
+     *          ------------------------------------------
+     *
+     *      2.塞入第一組資料在Adapter's constructor
+     *      hasFixSize = T
+     *          @前提 autoLoadMore = F & loadMoreToLoading(V)
+     *          loadMoreToLoading() >> OnLoadMoreListener
+     *          @result 匯入第一組第二組資料
+     *          -----------------------------------------
+     *          @前提 autoLoadMore = T & loadMoreToLoading(V)
+     *          loadMoreToLoading() >> OnLoadMoreListener >> loadMoreToLoading() >> OnLoadMoreListener
+     *          @result 匯入第一組第二組第三組資料
+     *          -----------------------------------------
+     *          @前提 autoLoadMore = F & loadMoreToLoading(X)
+     *          @result 匯入第一組
+     *          -----------------------------------------
+     *          @前提 autoLoadMore = T & loadMoreToLoading(X)
+     *          @result 匯入第一組第二組第三組資料
+     *          -----------------------------------------
+            hasFixSize = F
+     *          @前提 autoLoadMore = F & loadMoreToLoading(V)
+     *          loadMoreToLoading() >> OnLoadMoreListener
+     *          @result 匯入第一組第二組資料
+     *          -----------------------------------------
+     *          @前提 autoLoadMore = T & loadMoreToLoading(V)
+     *          loadMoreToLoading() >> OnLoadMoreListener >> loadMoreToLoading() >> OnLoadMoreListener
+     *          @result 匯入所有資料
+     *          -----------------------------------------
+     *          @前提 autoLoadMore = F & loadMoreToLoading(X)
+     *          @result 匯入第一組
+     *          -----------------------------------------
+     *          @前提 autoLoadMore = T & loadMoreToLoading(X)
+     *          @result 匯入所有資料
+     *          -----------------------------------------
+     * </p>
+     *
+     * NOTE 會不斷添增的RV 不能設定hasFixSize, 但要注意autoLoadMore的關係
+       PATCH setEnableLoadMore(),setAutoLoadMore(F),不invoke loadMoreToLoading()
+        皆不會觸發listener
+     *
+       PATCH: 滑動頁面到threshold >> request server request next page >> loadMoreToLoading();
+        若設定autoLoadMore, 則會自動顯示“loading ..."，不需要額外書寫
+     */
+    private void initLoadMoreAdapter() {
+        TextView title = view.findViewById(R.id.loadMoreTitle);
+        RecyclerView loadMoreRecyclerView = view.findViewById(R.id.loadMoreRecycler);
+        //the order is from the top to the end
+//        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
+        title.setText(
+                manager.canScrollHorizontally()
+                        ? "Load More Horizontal"
+                        : "Load More Vertical"
+        );
+        loadMoreRecyclerView.setLayoutManager(manager);
+        loadMoreRecyclerView.setHasFixedSize(false);
+        loadMoreRecyclerView.setNestedScrollingEnabled(false);//減少黏著 nestscroll view
+
+        PageLoader loader = new PageLoader();
+        LoadMoreAdapter adapter = new LoadMoreAdapter();
+        //LoadMoreAdapter adapter = new LoadMoreAdapter(loader.loadData(getContext()));
+        adapter.getLoadMoreModule().setLoadMoreView(new LoadMoreView());
+        loadMoreRecyclerView.setAdapter(adapter);//需在設定load more 之前
+
+        Log.d(TAG, "initLoadMoreAdapter: set adapter ready");
+
+        // 设置加载更多监听事件
+        // NOTE 點擊要加載 or autoLoadMore = true >> isLoading() >> OnLoadMoreListener
+        adapter.getLoadMoreModule().setOnLoadMoreListener(() -> {
+            Log.d(TAG, "initLoadMoreAdapter: load more listener");
+
+            // 这里的作用是防止下拉刷新的时候还可以上拉加载, 在swipeRefresh 時要設成false
+            adapter.getLoadMoreModule().setEnableLoadMore(true);
+            if (adapter.getLoadMoreModule().isEnableLoadMore()){
+                //PATCH: load fail
+                List<String> list = loader.loadData(getContext());
+                Log.d(TAG, "initLoadMoreAdapter: load list");
+
+                //NOTE 一定要存入arrayList
+                if (loader.isFirstPage()){
+                    adapter.setList(list);
+                }else{
+                    adapter.addData(list);
+                }
+            }
+
+            //重載完畢
+            if (loader.getPageId() >= (loader.getPageSize()-1)){//加載到最後一頁
+                adapter.getLoadMoreModule().loadMoreEnd();
+            } else {
+                adapter.getLoadMoreModule().loadMoreComplete();
+            }
+        });
+
+        // PATCH default = true
+         adapter.getLoadMoreModule().setAutoLoadMore(true);
+        adapter.getLoadMoreModule().loadMoreToLoading();
+
+        //当自动加载开启，同时数据不满一屏时，是否继续执行自动加载更多(默认为true)
+        adapter.getLoadMoreModule().setEnableLoadMoreIfNotFullPage(true);
+
+    }
 }
