@@ -1,4 +1,4 @@
-package com.example.recyclerviewpractice.node;
+package com.example.recyclerviewpractice.expand;
 
 import com.chad.library.adapter.base.entity.node.BaseNode;
 
@@ -28,7 +28,7 @@ import java.util.List;
  *
  * <IMPORTANT>以樹狀結構</IMPORTANT>
  */
-public class SectionData extends MultiBaseNode {
+public class SectionExpandData extends MultiExpandNode {
     private final String title;
     private List<BaseNode> _2ndNodes;
 
@@ -37,9 +37,12 @@ public class SectionData extends MultiBaseNode {
         return title;
     }
 
-    public <E extends BaseNode> SectionData(String title, List<E> data) {
+    public <E extends BaseNode> SectionExpandData(String title, List<E> data) {
         this.title = title;
         _2ndNodes = (List<BaseNode>) data;
+        // 也可以在生成 Node 后设置。
+        // 注意：必须在设置给 Adapter 之前修改。数据设置给Adapter后，不应该再修改
+        setExpanded(false);
     }
 
     @Override

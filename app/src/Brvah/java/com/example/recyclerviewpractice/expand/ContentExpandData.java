@@ -1,4 +1,4 @@
-package com.example.recyclerviewpractice.node;
+package com.example.recyclerviewpractice.expand;
 
 import androidx.annotation.Nullable;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @params NodeFooterImp 是讓要做footer 才實作
  * @params
  */
-public class ContentData extends MultiBaseNode implements NodeFooterImp {
+public class ContentExpandData extends MultiExpandNode implements NodeFooterImp {
 
     private String title;
     private BaseNode foot;
@@ -27,9 +27,10 @@ public class ContentData extends MultiBaseNode implements NodeFooterImp {
      * @param name
      * @param footer
      */
-    public ContentData(String name, BaseNode footer) {
+    public ContentExpandData(String name, BaseNode footer) {
         title = name;
         foot = footer;
+        setExpanded(true);
     }
 
 

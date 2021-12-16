@@ -21,7 +21,6 @@ import java.util.List;
  * @ref https://github.com/CymChad/BaseRecyclerViewAdapterHelper/blob/master/readme/6-BaseNodeAdapter.md
  */
 public class NodeAdapter extends BaseNodeAdapter { //different parent class
-    private String TAG = NodeAdapter.class.getSimpleName();
 
     public NodeAdapter() {
         super();
@@ -39,12 +38,8 @@ public class NodeAdapter extends BaseNodeAdapter { //different parent class
     @Override
     protected int getItemType(List<? extends BaseNode> list, int position) {
         BaseNode node = list.get(position);
-        if (node instanceof SectionData) {
-            return ((SectionData) node).getItemType();
-        } else if (node instanceof ContentData) {
-            return ((ContentData) node).getItemType();
-        } else if (node instanceof FootData) {
-            return ((FootData) node).getItemType();
+        if (node instanceof NodeData) {
+            return ((NodeData) node).getItemType();
         }
         return -1;
     }
