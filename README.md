@@ -35,7 +35,7 @@ After you run the project, BuildConfig will be created, then this error will dis
 - Use native adapter
 - Add divider and margin dynamically via ItemDecoration</br>
 
-<img src="https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recoding/GridHor.gif" width="257" height="447">
+<img src="https://j.gifs.com/VvoAVO.gif" width="257" height="447">
 
 
 
