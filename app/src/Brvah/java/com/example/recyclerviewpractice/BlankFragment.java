@@ -363,15 +363,17 @@ public class BlankFragment extends Fragment {
         loadMoreRecyclerView.setNestedScrollingEnabled(false);//減少黏著 nestscroll view
 
         PageLoader loader = new PageLoader();
-        LoadMoreAdapter adapter = new LoadMoreAdapter();
-        //LoadMoreAdapter adapter = new LoadMoreAdapter(loader.loadData(getContext()));
+        //LoadMoreAdapter adapter = new LoadMoreAdapter();
+        LoadMoreAdapter adapter = new LoadMoreAdapter(loader.loadData(getContext()));
         adapter.getLoadMoreModule().setLoadMoreView(new LoadMoreView());
         loadMoreRecyclerView.setAdapter(adapter);//需在設定load more 之前
 
         Log.d(TAG, "initLoadMoreAdapter: set adapter ready");
+        Log.d(TAG, "initLoadMoreAdapter: isLoading="+adapter.getLoadMoreModule().isLoading());
 
         // 设置加载更多监听事件
         // NOTE 點擊要加載 or autoLoadMore = true >> isLoading() >> OnLoadMoreListener
+        //  必定要添加listener 才會改變load more view
         adapter.getLoadMoreModule().setOnLoadMoreListener(() -> {
             Log.d(TAG, "initLoadMoreAdapter: load more listener");
 
@@ -399,8 +401,11 @@ public class BlankFragment extends Fragment {
         });
 
         // PATCH default = true
-         adapter.getLoadMoreModule().setAutoLoadMore(true);
-        adapter.getLoadMoreModule().loadMoreToLoading();
+         adapter.getLoadMoreModule().setAutoLoadMore(false);
+        //adapter.getLoadMoreModule().loadMoreToLoading();
+        adapter.getLoadMoreModule().loadMoreFail();
+        //adapter.getLoadMoreModule().loadMoreComplete();
+        //adapter.getLoadMoreModule().loadMoreEnd();
 
         //当自动加载开启，同时数据不满一屏时，是否继续执行自动加载更多(默认为true)
         adapter.getLoadMoreModule().setEnableLoadMoreIfNotFullPage(true);
