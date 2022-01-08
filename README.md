@@ -8,7 +8,7 @@ Use Build varient to manage different UI design implementation.
 Note: if you change to new build varient or open my project, variant's buildConfig is not created.
 Just skip the error and build it. It's not affect preformance.
 After you run the project, BuildConfig will be created, then this error will disappear.</br>
-<img src="https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recording/ChangeBuildVarient.mp4" width="100" height="100">
+<img src="https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recoding/ChangeBuildVarient.gif">
 
 
 ### LinearVer [=LinearVertical layout] varient
@@ -23,19 +23,19 @@ After you run the project, BuildConfig will be created, then this error will dis
 - Dynamic modify the width per item via SpanSize</br>
 -> make the first header to be one row, the others header is the same size with items
 
-![image](https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recording/GridVertical.mp4)
+<img src="https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recoding/GridVertical.gif" width="257" height="447"> 
 
 ### StaggerVer [=StaggerVertical layout] varient
 - Use native adapter
 - Fixed height of header and random height of items
  
-![image](https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recording/StaggerVertical.mp4)
+<img src="https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recoding/StaggerVertical.gif" width="257" height="447">
 
 ### GridHor [=GridHorizontal layout] varient
 - Use native adapter
 - Add divider and margin dynamically via ItemDecoration</br>
 
-![image](https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recording/GridHor.mp4)
+<img src="https://github.com/dendrocyte/RecyclerviewPractice/blob/main/recoding/GridHor.gif" width="257" height="447">
 
 
 
